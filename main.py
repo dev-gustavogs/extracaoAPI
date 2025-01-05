@@ -1,3 +1,4 @@
+import time
 import requests
 from tinydb import TinyDB
 from datetime import datetime
@@ -14,10 +15,12 @@ def transform_dados_bitcoin(dados):
   valor = dados ['data']['amount']
   criptomoeda = dados ['data']['base']
   moeda = dados ['data']['currency']
+  timestemp =datetime.now().timestamp()
   dados_transformados ={
     'valor': valor,
     'criptomoeda': criptomoeda,
-    'moeda': moeda
+    'moeda': moeda,
+    'timestemp': timestemp
   }
   return dados_transformados
 
@@ -29,6 +32,8 @@ def salvar_dados_tinydb(dados, db_name="bitcoin.json"):
   
 if __name__ == "__main__":
     # Extração e tratamento dos dados
-    dados_json = extrair_dados_bitcoin()
-    dados_tratados = transform_dados_bitcoin(dados_json)
-    salvar_dados_tinydb(dados_tratados)
+    while True:
+      dados_json = extrair_dados_bitcoin()
+      dados_tratados = transform_dados_bitcoin(dados_json)
+      salvar_dados_tinydb(dados_tratados)
+      time.sleep(15)
